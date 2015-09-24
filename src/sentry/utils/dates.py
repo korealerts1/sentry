@@ -11,7 +11,10 @@ from datetime import datetime
 from dateutil.parser import parse
 from django.db import connections
 
+import pytz
+
 from sentry.utils.db import get_db_engine
+
 
 DATE_TRUNC_GROUPERS = {
     'oracle': {
@@ -23,6 +26,10 @@ DATE_TRUNC_GROUPERS = {
         'minute': 'minute',
     },
 }
+
+
+def to_timestamp(value):
+    return (value - datetime(1970, 1, 1, tzinfo=pytz.utc)).total_seconds()
 
 
 def get_sql_date_trunc(col, db='default', grouper='hour'):
